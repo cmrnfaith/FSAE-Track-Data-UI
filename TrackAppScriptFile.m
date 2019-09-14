@@ -1,4 +1,4 @@
-
+CSVdata = importdata
 
 classdef TrackAppScriptFile < matlab.apps.AppBase
 
