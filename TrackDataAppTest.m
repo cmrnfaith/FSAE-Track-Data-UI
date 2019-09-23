@@ -44,4 +44,4 @@
         
         Widthlong = abs(long2 - long1);
         Widthlat = abs(lat2 - lat1);
-        rectangle('Position', [lat1 long2 Widthlat Widthlong]);
+        rectangle(u'Position', [lat1 long2 Widthlat Widthlong]);
