@@ -5,17 +5,38 @@ classdef TrackDataAppTest < matlab.apps.AppBase
         UIFigure              matlab.ui.Figure
         DataMenu              matlab.ui.container.Menu
         SelectStartPointMenu  matlab.ui.container.Menu
-        Menu2                 matlab.ui.container.Menu
         TabGroup              matlab.ui.container.TabGroup
+        GPSTab                matlab.ui.container.Tab
+        UIAxes2               matlab.ui.control.UIAxes
+        UIAxes3               matlab.ui.control.UIAxes
+        ACCELTab              matlab.ui.container.Tab
+        UIAxes6               matlab.ui.control.UIAxes
+        UIAxes7               matlab.ui.control.UIAxes
+        UIAxes8               matlab.ui.control.UIAxes
+        ROLLTab               matlab.ui.container.Tab
+        UIAxes9               matlab.ui.control.UIAxes
+        UIAxes10              matlab.ui.control.UIAxes
+        UIAxes11              matlab.ui.control.UIAxes
+        FrontPOTSTab          matlab.ui.container.Tab
+        UIAxes12              matlab.ui.control.UIAxes
+        UIAxes13              matlab.ui.control.UIAxes
+        RearPOTSTab           matlab.ui.container.Tab
+        UIAxes14              matlab.ui.control.UIAxes
+        UIAxes15              matlab.ui.control.UIAxes
+        BRAKESTab             matlab.ui.container.Tab
+        UIAxes4               matlab.ui.control.UIAxes
+        UIAxes5               matlab.ui.control.UIAxes
+        General2              matlab.ui.container.Tab
+        UIAxes16              matlab.ui.control.UIAxes
+        UIAxes17              matlab.ui.control.UIAxes
         EngineTab             matlab.ui.container.Tab
         RPMGaugeLabel         matlab.ui.control.Label
         RPMGauge              matlab.ui.control.Gauge
-        ImportDataButton      matlab.ui.control.Button
-        TestGraphsTab         matlab.ui.container.Tab
-        UIAxes2               matlab.ui.control.UIAxes
         UIAxes                matlab.ui.control.UIAxes
         LapDropDownLabel      matlab.ui.control.Label
         LapDropDown           matlab.ui.control.DropDown
+        ImportDataButton      matlab.ui.control.Button
+        SelectDataButton      matlab.ui.control.Button
     end
 
     
@@ -58,6 +79,8 @@ classdef TrackDataAppTest < matlab.apps.AppBase
         %GENERAL
         Lat_filtered
         Long_filtered
+        Selected_Lat
+        Selected_Long
         Speed_filtered
         Time_filtered
         RPM_filtered
@@ -105,37 +128,37 @@ classdef TrackDataAppTest < matlab.apps.AppBase
             %   cut out initial and final data where sensors aren't running
             
             %General
-            app.Lat = rmmissing(data.x_Latitude___Degrees____180_0_180_0_50_');
-            app.Long = rmmissing(data.x_Longitude___Degrees____180_0_180_0_50_');
-            app.Speed = rmmissing(data.x_Speed___MPH___0_0_150_0_50_');
-            app.Time = rmmissing(data.x_Interval___ms___0_0_1_');
-            app.RPM = rmmissing(data.x_RPM___RPM___0_12500_50_');
-            app.Steering_Angle = rmmissing(data.x_SteeringAng___Volts____105_0_105_0_50_');
-            app.Altitude = rmmissing(data.x_Altitude___ft___0_0_4000_0_50_');
+            app.Lat = fillmissing(data.x_Latitude___Degrees____180_0_180_0_50_','movmean',5);
+            app.Long = fillmissing(data.x_Longitude___Degrees____180_0_180_0_50_','movmean',5);
+            app.Speed = fillmissing(data.x_Speed___MPH___0_0_150_0_50_','movmean',5);
+            app.Time = fillmissing(data.x_Interval___ms___0_0_1_','movmean',5);
+            app.RPM = fillmissing(data.x_RPM___RPM___0_12500_50_','movmean',5);
+            app.Steering_Angle = fillmissing(data.x_SteeringAng___Volts____105_0_105_0_50_','movmean',5);
+            app.Altitude = fillmissing(data.x_Altitude___ft___0_0_4000_0_50_','movmean',5);
             
             %POTENTIOMETERS
-            app.FL_Damper = rmmissing(data.x_FrontLeft______0_0_100_0_100_');
-            app.FR_Damper = rmmissing(data.x_FrontRight______0_0_100_0_100_');
-            app.RL_Damper = rmmissing(data.x_RearLeft______0_0_100_0_100_');
-            app.RR_Damper = rmmissing(data.x_RearRight______0_0_100_0_100_');
+            app.FL_Damper = fillmissing(data.x_FrontLeft______0_0_100_0_100_','movmean',5);
+            app.FR_Damper = fillmissing(data.x_FrontRight______0_0_100_0_100_','movmean',5);
+            app.RL_Damper = fillmissing(data.x_RearLeft______0_0_100_0_100_','movmean',5);
+            app.RR_Damper = fillmissing(data.x_RearRight______0_0_100_0_100_','movmean',5);
             
             %BRAKES
-            app.R_Brake = rmmissing(data.x_RearBrake___Volts___0_0_5_0_50_');
-            app.F_Brake = rmmissing(data.x_FrontBrake___Volts___0_0_5_0_50_');
+            app.R_Brake = fillmissing(data.x_RearBrake___Volts___0_0_5_0_50_','movmean',5);
+            app.F_Brake = fillmissing(data.x_FrontBrake___Volts___0_0_5_0_50_','movmean',5);
             
             %ROLL
-            app.Yaw = rmmissing(data.x_Yaw___Deg_Sec____120_120_25_');
-            app.Pitch = rmmissing(data.x_Pitch___Deg_Sec____120_120_25_');
-            app.Roll = rmmissing(data.x_Roll___Deg_Sec____120_120_25_');
+            app.Yaw = fillmissing(data.x_Yaw___Deg_Sec____120_120_25_','movmean',9);
+            app.Pitch = fillmissing(data.x_Pitch___Deg_Sec____120_120_25_','movmean',9);
+            app.Roll = fillmissing(data.x_Roll___Deg_Sec____120_120_25_','movmean',9);
             
             %ACCELERATION
-            app.Accel_X = rmmissing(data.x_AccelX___G____3_0_3_0_25_');
-            app.Accel_Y = rmmissing(data.x_AccelY___G____3_0_3_0_25_');
-            app.Accel_Z = rmmissing(data.x_AccelZ___G____3_0_3_0_25_');
+            app.Accel_X = fillmissing(data.x_AccelX___G____3_0_3_0_25_','movmean',9);
+            app.Accel_Y = fillmissing(data.x_AccelY___G____3_0_3_0_25_','movmean',9);
+            app.Accel_Z = fillmissing(data.x_AccelZ___G____3_0_3_0_25_','movmean',9);
             
-            %Filling with zeros for testing. Will either need to cut out data
-            %or find a way to make the vector lengths the same.
-            %app.Speed(numel(app.Long)) = 0;
+            %   Filling with zeros for testing. Will either need to cut out data
+            %   or find a way to make the vector lengths the same.
+            %   app.Speed(numel(app.Long)) = 0;
             
             %   Manual Setpoints for the initial start of the "Laps" will
             %   implement another method for the user to be able to manually
@@ -158,7 +181,8 @@ classdef TrackDataAppTest < matlab.apps.AppBase
             SamplingFinish = 80;
             
             for i = SamplingStart:(length(app.Yaw) - SamplingFinish)
-                if (counter <= (SamplingFreq - 1)) && ((app.Lat(i) <= lat2) && (app.Lat(i) >= lat1)) && ((app.Long(i) <= long2) && (app.Long(i) >= long1))
+                
+                if (counter == 0) && ((app.Lat(i) <= lat2) && (app.Lat(i) >= lat1)) && ((app.Long(i) <= long2) && (app.Long(i) >= long1))
                     index = 1;
                     counter = 20;
                     i = i + SamplingFreq;
@@ -193,19 +217,24 @@ classdef TrackDataAppTest < matlab.apps.AppBase
                 app.Accel_Y_filtered(index,LapNumber)= app.Accel_Y(i);
                 app.Accel_Z_filtered(index,LapNumber)= app.Accel_Z(i);
                 
-                
                 index = index + SamplingFreq;
                 
-                if counter > SamplingFreq - 1    %To make sure counter doesn't go below zero... counter should be a multiple of freq
-                    counter = counter - SamplingFreq;
+                if counter ~= 0   %To make sure counter doesn't go below zero... counter should be a multiple of freq
+                    counter = counter - 1;
                 end
+                
+                
             end
+            
             LapNumber %#ok<NOPRT>
+            
+            
             
             colormap(app.UIAxes,hsv);
             scatter(app.UIAxes,app.Lat(10000:21000),app.Long(10000:21000),20,app.Speed(10000:21000));
             colorbar(app.UIAxes);
             
+            PlotTestGraphsTab(app,str2num(app.LapDropDown.Value));
         end
     end
     
@@ -223,8 +252,67 @@ classdef TrackDataAppTest < matlab.apps.AppBase
     methods (Access = public)
         
         function results = PlotTestGraphsTab(app,lap)
-            scatter(app.UIAxes2,[1:1:length(nonzeros(app.Speed_filtered(:,lap)))],nonzeros(app.Speed_filtered(:,lap)));
+            %   GPS Tab
+            scatter(app.UIAxes2,[1:1:length((app.Speed_filtered(:,lap)))],(app.Speed_filtered(:,lap)));
+            scatter(app.UIAxes3,[1:1:length((app.Altitude_filtered(:,lap)))],(app.Altitude_filtered(:,lap)));
+            %   Brakes Tab
+            scatter(app.UIAxes4,[1:1:length((app.R_Brake_filtered(:,lap)))],(app.R_Brake_filtered(:,lap)));
+            scatter(app.UIAxes5,[1:1:length((app.F_Brake_filtered(:,lap)))],(app.F_Brake_filtered(:,lap)));
+            %   Accel Tab
+            scatter(app.UIAxes6,[1:1:length((app.Accel_X_filtered(:,lap)))],(app.Accel_X_filtered(:,lap)));
+            scatter(app.UIAxes7,[1:1:length((app.Accel_Y_filtered(:,lap)))],(app.Accel_Y_filtered(:,lap)));
+            scatter(app.UIAxes8,[1:1:length((app.Accel_Z_filtered(:,lap)))],(app.Accel_Z_filtered(:,lap)));
+            %   Front POTS
+            scatter(app.UIAxes12,[1:1:length((app.FL_Damper_filtered(:,lap)))],(app.FL_Damper_filtered(:,lap)));
+            scatter(app.UIAxes13,[1:1:length((app.FR_Damper_filtered(:,lap)))],(app.FR_Damper_filtered(:,lap)));
             
+            %   Rear POTS
+            scatter(app.UIAxes14,[1:1:length((app.RL_Damper_filtered(:,lap)))],(app.RL_Damper_filtered(:,lap)));
+            scatter(app.UIAxes15,[1:1:length((app.RR_Damper_filtered(:,lap)))],(app.RR_Damper_filtered(:,lap)));
+            
+            %   ROLL
+            scatter(app.UIAxes9, [1:1:length(app.Roll_filtered(:,lap))],app.Roll_filtered(:,lap));
+            scatter(app.UIAxes10,[1:1:length(app.Yaw_filtered(:,lap))],app.Yaw_filtered(:,lap));
+            scatter(app.UIAxes11,[1:1:length(app.Pitch_filtered(:,lap))],app.Pitch_filtered(:,lap));
+            
+            %   General2 - Steering angle / RPM
+            scatter(app.UIAxes16,[1:1:length((app.Steering_Angle_filtered(:,lap)))],(app.Steering_Angle_filtered(:,lap)));
+            scatter(app.UIAxes17,[1:1:length((app.RPM_filtered(:,lap)))],(app.RPM_filtered(:,lap)));
+
+            
+        end
+        
+    end
+    
+    methods (Access = public)
+        
+        function results = PlotSelectedData(app,lap,index)
+            %   GPS Tab
+            scatter(app.UIAxes2,[1:1:length((app.Speed_filtered(index,lap)))],(app.Speed_filtered(index,lap)));
+            scatter(app.UIAxes3,[1:1:length((app.Altitude_filtered(index,lap)))],(app.Altitude_filtered(index,lap)));
+            %   Brakes Tab
+            scatter(app.UIAxes4,[1:1:length((app.R_Brake_filtered(index,lap)))],(app.R_Brake_filtered(index,lap)));
+            scatter(app.UIAxes5,[1:1:length((app.F_Brake_filtered(index,lap)))],(app.F_Brake_filtered(index,lap)));
+            %   Accel Tab
+            scatter(app.UIAxes6,[1:1:length((app.Accel_X_filtered(index,lap)))],(app.Accel_X_filtered(index,lap)));
+            scatter(app.UIAxes7,[1:1:length((app.Accel_Y_filtered(index,lap)))],(app.Accel_Y_filtered(index,lap)));
+            scatter(app.UIAxes8,[1:1:length((app.Accel_Z_filtered(index,lap)))],(app.Accel_Z_filtered(index,lap)));
+            %   Front POTS
+            scatter(app.UIAxes12,[1:1:length((app.FL_Damper_filtered(index,lap)))],(app.FL_Damper_filtered(index,lap)));
+            scatter(app.UIAxes13,[1:1:length((app.FR_Damper_filtered(index,lap)))],(app.FR_Damper_filtered(index,lap)));
+            
+            %   Rear POTS
+            scatter(app.UIAxes14,[1:1:length((app.RL_Damper_filtered(index,lap)))],(app.RL_Damper_filtered(index,lap)));
+            scatter(app.UIAxes15,[1:1:length((app.RR_Damper_filtered(index,lap)))],(app.RR_Damper_filtered(index,lap)));
+            
+            %   ROLL
+            scatter(app.UIAxes9, [1:1:length(app.Roll_filtered(index,lap))],app.Roll_filtered(index,lap));
+            scatter(app.UIAxes10,[1:1:length(app.Yaw_filtered(index,lap))],app.Yaw_filtered(index,lap));
+            scatter(app.UIAxes11,[1:1:length(app.Pitch_filtered(index,lap))],app.Pitch_filtered(index,lap));
+            
+            %   General2 - Steering angle / RPM
+            scatter(app.UIAxes16,[1:1:length((app.Steering_Angle_filtered(index,lap)))],(app.Steering_Angle_filtered(index,lap)));
+            scatter(app.UIAxes17,[1:1:length((app.RPM_filtered(index,lap)))],(app.RPM_filtered(index,lap)));
         end
     end
     
@@ -232,9 +320,9 @@ classdef TrackDataAppTest < matlab.apps.AppBase
     % Callbacks that handle component events
     methods (Access = private)
 
-        % Size changed function: TestGraphsTab
-        function TestGraphsTabSizeChanged(app, event)
-            position = app.TestGraphsTab.Position;
+        % Size changed function: GPSTab
+        function GPSTabSizeChanged(app, event)
+            position = app.GPSTab.Position;
             
         end
 
@@ -247,13 +335,13 @@ classdef TrackDataAppTest < matlab.apps.AppBase
         % Menu selected function: SelectStartPointMenu
         function SelectStartPointMenuSelected(app, event)
             %When Data -> Startpoint is selected this function is started.
-            %             startPointFigure = figure;
-            %             data = uiimport('-file');
-            %             Lat = rmmissing(data.x_Latitude___Degrees____180_0_180_0_50_');
-            %             Long = rmmissing(data.x_Longitude___Degrees____180_0_180_0_50_');
-            %             Speed = rmmissing(data.x_Speed___MPH___0_0_150_0_50_');
-            %             scatter(Lat(10000:21000),Long(10000:21000),20,Speed(10000:21000))
-            %             colormap(hsv);
+%             startPointFigure = figure;
+%             data = uiimport('-file');
+%             Lat = rmmissing(data.x_Latitude___Degrees____180_0_180_0_50_');
+%             Long = rmmissing(data.x_Longitude___Degrees____180_0_180_0_50_');
+%             Speed = rmmissing(data.x_Speed___MPH___0_0_150_0_50_');
+%             scatter(Lat(10000:21000),Long(10000:21000),20,Speed(10000:21000))
+%             colormap(hsv);
             
         end
 
@@ -261,7 +349,27 @@ classdef TrackDataAppTest < matlab.apps.AppBase
         function LapDropDownValueChanged(app, event)
             value = str2num(app.LapDropDown.Value);
             scatter(app.UIAxes,nonzeros(app.Lat_filtered(:,value)),nonzeros(app.Long_filtered(:,value)));
+            colorbar(app.UIAxes,'off');
             PlotTestGraphsTab(app,value);
+        end
+
+        % Button pushed function: SelectDataButton
+        function SelectDataButtonPushed(app, event)
+            value = str2num(app.LapDropDown.Value);
+            colorbar(app.UIAxes,'off');
+            f = figure;
+            scatter(nonzeros(app.Lat_filtered(:,value)),nonzeros(app.Long_filtered(:,value)));
+            [app.Selected_Lat,app.Selected_Long]=ginput(2);
+            close(f);
+            j = 1;
+            for i = 1:1:length(app.Lat_filtered(:,value))
+                if((app.Lat_filtered(i,value) >= app.Selected_Lat(1)) && (app.Lat_filtered(i,value) <= app.Selected_Lat(2))) && ((app.Long_filtered(i,value) >= app.Selected_Long(1)) && ((app.Long_filtered(i,value) <= app.Selected_Long(2))))
+                    index(j) = i;
+                    j = j + 1;
+                end
+            end
+            scatter(app.UIAxes,nonzeros(app.Lat_filtered(index,value)),nonzeros(app.Long_filtered(index,value)));
+            PlotSelectedData(app,value,index)
         end
     end
 
@@ -285,13 +393,155 @@ classdef TrackDataAppTest < matlab.apps.AppBase
             app.SelectStartPointMenu.MenuSelectedFcn = createCallbackFcn(app, @SelectStartPointMenuSelected, true);
             app.SelectStartPointMenu.Text = 'Select Start Point';
 
-            % Create Menu2
-            app.Menu2 = uimenu(app.UIFigure);
-            app.Menu2.Text = 'Menu2';
-
             % Create TabGroup
             app.TabGroup = uitabgroup(app.UIFigure);
             app.TabGroup.Position = [377 1 420 588];
+
+            % Create GPSTab
+            app.GPSTab = uitab(app.TabGroup);
+            app.GPSTab.SizeChangedFcn = createCallbackFcn(app, @GPSTabSizeChanged, true);
+            app.GPSTab.Title = 'GPS';
+
+            % Create UIAxes2
+            app.UIAxes2 = uiaxes(app.GPSTab);
+            title(app.UIAxes2, 'Track Speed')
+            xlabel(app.UIAxes2, 'Point')
+            ylabel(app.UIAxes2, 'Speed')
+            app.UIAxes2.PlotBoxAspectRatio = [1.84126984126984 1 1];
+            app.UIAxes2.XGrid = 'on';
+            app.UIAxes2.YGrid = 'on';
+            app.UIAxes2.Position = [-8 306 427 257];
+
+            % Create UIAxes3
+            app.UIAxes3 = uiaxes(app.GPSTab);
+            title(app.UIAxes3, 'Altitude')
+            xlabel(app.UIAxes3, 'Time')
+            ylabel(app.UIAxes3, 'Altitude')
+            app.UIAxes3.XGrid = 'on';
+            app.UIAxes3.YGrid = 'on';
+            app.UIAxes3.Position = [1 38 418 269];
+
+            % Create ACCELTab
+            app.ACCELTab = uitab(app.TabGroup);
+            app.ACCELTab.Title = 'ACCEL';
+
+            % Create UIAxes6
+            app.UIAxes6 = uiaxes(app.ACCELTab);
+            title(app.UIAxes6, 'X Accel')
+            xlabel(app.UIAxes6, 'Time')
+            ylabel(app.UIAxes6, 'G')
+            app.UIAxes6.Position = [1 378 418 185];
+
+            % Create UIAxes7
+            app.UIAxes7 = uiaxes(app.ACCELTab);
+            title(app.UIAxes7, 'Y Accel')
+            xlabel(app.UIAxes7, 'Time')
+            ylabel(app.UIAxes7, 'G')
+            app.UIAxes7.Position = [1 194 419 185];
+
+            % Create UIAxes8
+            app.UIAxes8 = uiaxes(app.ACCELTab);
+            title(app.UIAxes8, 'Z Accel')
+            xlabel(app.UIAxes8, 'Time')
+            ylabel(app.UIAxes8, 'G')
+            app.UIAxes8.Position = [1 9 418 185];
+
+            % Create ROLLTab
+            app.ROLLTab = uitab(app.TabGroup);
+            app.ROLLTab.Title = 'ROLL';
+
+            % Create UIAxes9
+            app.UIAxes9 = uiaxes(app.ROLLTab);
+            title(app.UIAxes9, 'Roll')
+            xlabel(app.UIAxes9, 'Time')
+            ylabel(app.UIAxes9, '(Deg/s)')
+            app.UIAxes9.Position = [1 378 418 185];
+
+            % Create UIAxes10
+            app.UIAxes10 = uiaxes(app.ROLLTab);
+            title(app.UIAxes10, 'Yaw')
+            xlabel(app.UIAxes10, 'Time')
+            ylabel(app.UIAxes10, '(Deg/s)')
+            app.UIAxes10.Position = [1 194 418 185];
+
+            % Create UIAxes11
+            app.UIAxes11 = uiaxes(app.ROLLTab);
+            title(app.UIAxes11, 'Pitch')
+            xlabel(app.UIAxes11, 'Time')
+            ylabel(app.UIAxes11, '(Deg/s)')
+            app.UIAxes11.Position = [1 10 418 185];
+
+            % Create FrontPOTSTab
+            app.FrontPOTSTab = uitab(app.TabGroup);
+            app.FrontPOTSTab.Title = 'Front POTS';
+
+            % Create UIAxes12
+            app.UIAxes12 = uiaxes(app.FrontPOTSTab);
+            title(app.UIAxes12, 'FL')
+            xlabel(app.UIAxes12, 'Time')
+            ylabel(app.UIAxes12, 'Voltage')
+            app.UIAxes12.Position = [1 289 418 274];
+
+            % Create UIAxes13
+            app.UIAxes13 = uiaxes(app.FrontPOTSTab);
+            title(app.UIAxes13, 'FR')
+            xlabel(app.UIAxes13, 'Time')
+            ylabel(app.UIAxes13, 'Voltage')
+            app.UIAxes13.Position = [1 38 419 252];
+
+            % Create RearPOTSTab
+            app.RearPOTSTab = uitab(app.TabGroup);
+            app.RearPOTSTab.Title = 'Rear POTS';
+
+            % Create UIAxes14
+            app.UIAxes14 = uiaxes(app.RearPOTSTab);
+            title(app.UIAxes14, 'RL')
+            xlabel(app.UIAxes14, 'Time')
+            ylabel(app.UIAxes14, 'Voltage (Degrees)')
+            app.UIAxes14.Position = [1 303 418 260];
+
+            % Create UIAxes15
+            app.UIAxes15 = uiaxes(app.RearPOTSTab);
+            title(app.UIAxes15, 'RR')
+            xlabel(app.UIAxes15, 'Time')
+            ylabel(app.UIAxes15, 'Voltage')
+            app.UIAxes15.Position = [1 38 418 266];
+
+            % Create BRAKESTab
+            app.BRAKESTab = uitab(app.TabGroup);
+            app.BRAKESTab.Title = 'BRAKES';
+
+            % Create UIAxes4
+            app.UIAxes4 = uiaxes(app.BRAKESTab);
+            title(app.UIAxes4, 'Rear Brakes')
+            xlabel(app.UIAxes4, 'Time')
+            ylabel(app.UIAxes4, 'V')
+            app.UIAxes4.Position = [1 288 418 275];
+
+            % Create UIAxes5
+            app.UIAxes5 = uiaxes(app.BRAKESTab);
+            title(app.UIAxes5, 'Front Brakes')
+            xlabel(app.UIAxes5, 'Time')
+            ylabel(app.UIAxes5, 'V')
+            app.UIAxes5.Position = [2 9 418 280];
+
+            % Create General2
+            app.General2 = uitab(app.TabGroup);
+            app.General2.Title = 'General2';
+
+            % Create UIAxes16
+            app.UIAxes16 = uiaxes(app.General2);
+            title(app.UIAxes16, 'Steering Angle')
+            xlabel(app.UIAxes16, '')
+            ylabel(app.UIAxes16, 'Angle')
+            app.UIAxes16.Position = [1 312 419 251];
+
+            % Create UIAxes17
+            app.UIAxes17 = uiaxes(app.General2);
+            title(app.UIAxes17, 'RPM')
+            xlabel(app.UIAxes17, 'Point')
+            ylabel(app.UIAxes17, 'RPM')
+            app.UIAxes17.Position = [1 30 418 283];
 
             % Create EngineTab
             app.EngineTab = uitab(app.TabGroup);
@@ -311,27 +561,6 @@ classdef TrackDataAppTest < matlab.apps.AppBase
             app.RPMGauge.FontColor = [1 0 0];
             app.RPMGauge.Position = [1 121 418 418];
             app.RPMGauge.Value = 1.4;
-
-            % Create ImportDataButton
-            app.ImportDataButton = uibutton(app.EngineTab, 'push');
-            app.ImportDataButton.ButtonPushedFcn = createCallbackFcn(app, @ImportDataButtonPushed, true);
-            app.ImportDataButton.Position = [305 9 100 22];
-            app.ImportDataButton.Text = 'Import Data';
-
-            % Create TestGraphsTab
-            app.TestGraphsTab = uitab(app.TabGroup);
-            app.TestGraphsTab.SizeChangedFcn = createCallbackFcn(app, @TestGraphsTabSizeChanged, true);
-            app.TestGraphsTab.Title = 'Test Graphs';
-
-            % Create UIAxes2
-            app.UIAxes2 = uiaxes(app.TestGraphsTab);
-            title(app.UIAxes2, 'Track Speed')
-            xlabel(app.UIAxes2, 'Point')
-            ylabel(app.UIAxes2, 'Speed')
-            app.UIAxes2.PlotBoxAspectRatio = [1.84126984126984 1 1];
-            app.UIAxes2.XGrid = 'on';
-            app.UIAxes2.YGrid = 'on';
-            app.UIAxes2.Position = [1 307 419 257];
 
             % Create UIAxes
             app.UIAxes = uiaxes(app.UIFigure);
@@ -356,6 +585,18 @@ classdef TrackDataAppTest < matlab.apps.AppBase
             app.LapDropDown.BackgroundColor = [1 1 1];
             app.LapDropDown.Position = [310 10 60 22];
             app.LapDropDown.Value = '1';
+
+            % Create ImportDataButton
+            app.ImportDataButton = uibutton(app.UIFigure, 'push');
+            app.ImportDataButton.ButtonPushedFcn = createCallbackFcn(app, @ImportDataButtonPushed, true);
+            app.ImportDataButton.Position = [21 10 100 22];
+            app.ImportDataButton.Text = 'Import Data';
+
+            % Create SelectDataButton
+            app.SelectDataButton = uibutton(app.UIFigure, 'push');
+            app.SelectDataButton.ButtonPushedFcn = createCallbackFcn(app, @SelectDataButtonPushed, true);
+            app.SelectDataButton.Position = [140 10 100 22];
+            app.SelectDataButton.Text = 'Select Data';
 
             % Show the figure after all components are created
             app.UIFigure.Visible = 'on';
