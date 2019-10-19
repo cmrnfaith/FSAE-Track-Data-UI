@@ -197,7 +197,7 @@ for rr = 1:t
     
     l = [l,'\n'];
     
-    fprintf(FID,l);
+    fprintf(FID, l);
     
     n = max(sz(:,1));
     
@@ -212,22 +212,22 @@ for rr = 1:t
             else
                 if isnumeric(c)
                     for kk = 1:sz(jj,2)
-                        str = [str,num2str(c(ii,kk)),','];
+                        str = [str,num2str(c(ii,kk), 8),','];
                     end
                 elseif islogical(c)
                     for kk = 1:sz(jj,2)
-                        str = [str,num2str(double(c(ii,kk))),','];
+                        str = [str,num2str(double(c(ii,kk)), 8),','];
                     end
                 elseif ischar(c)
                     str = ['"',c(ii,:),'",'];
                 elseif iscell(c)
                     if isnumeric(c{1,1})
                         for kk = 1:sz(jj,2)
-                            str = [str,num2str(c{ii,kk}),','];
+                            str = [str,num2str(c{ii,kk}, 8),','];
                         end
                     elseif islogical(c{1,1})
                         for kk = 1:sz(jj,2)
-                            str = [str,num2str(double(c{ii,kk})),','];
+                            str = [str,num2str(double(c{ii,kk}), 8),','];
                         end
                     elseif ischar(c{1,1})
                         for kk = 1:sz(jj,2)
