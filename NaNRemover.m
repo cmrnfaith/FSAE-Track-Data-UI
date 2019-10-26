@@ -112,9 +112,6 @@ end
 
 %Re-saving into new structure
 
-%LapIndexes
-data_filtered.Lap_Index = LapIndex;
-
 %GENERAL
 data_filtered.Latitude = Lat_filtered;
 data_filtered.Longitude = Long_filtered;
@@ -143,6 +140,8 @@ data_filtered.Roll = Roll_filtered;
 data_filtered.Accel_X = Accel_X_filtered;
 data_filtered.Accel_Y = Accel_Y_filtered;
 data_filtered.Accel_Z = Accel_Z_filtered;
+%LapIndexes
+data_filtered.Lap_Index = LapIndex;
 
 struct2csv(data_filtered, 'log_1_cleaned.csv');
 clear
