@@ -61,6 +61,8 @@ xlb = 'Shock Speed(no units yet)'; %xlabel for plots
 ylb = 'Probability (%)'; %ylabel for plots
 xlimit = bl;
 ylimit = [0 .15];
+xlabel(xlb);
+box = [.75, .75 .2 .2];
 
 %start of plotting
 figure
@@ -94,7 +96,7 @@ subplot(2,2,3);
 %histogram for REAR LEFT
 histogram(shockspeedrl, nbins, 'Normalization','probability', 'BinLimits', bl);
 title('Shock Speed - Rear Left(Normalized Distribution)');
-xlabel(xlb);
+annotation('textbox', box, 'String', "Standard Deviation: % \n
 ylabel(ylb);
 xlim(xlimit);
 ylim(ylimit);

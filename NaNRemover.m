@@ -55,6 +55,7 @@ LapNumber = 1;
 counter = 0;
 index = 1;
 
+
 %Sampling Frequency => Default is 1
 SamplingFreq = 4;
 
@@ -66,6 +67,7 @@ SamplingFinish = 80;
 for i = SamplingStart:(length(Yaw) - SamplingFinish)
     
     if (counter == 0) && ((Lat(i) <= Selected_Lat(2)) && (Lat(i) >= Selected_Lat(1))) && ((Long(i) <= Selected_Long(2)) && (Long(i) >= Selected_Long(1)))
+        LapIndex(LapNumber,1) =index;
         index = 1;
         counter = 2000;
         LapNumber = LapNumber + 1;
@@ -109,6 +111,9 @@ end
 
 
 %Re-saving into new structure
+
+%LapIndexes
+data_filtered.Lap_Index = LapIndex;
 
 %GENERAL
 data_filtered.Latitude = Lat_filtered;
