@@ -46,10 +46,29 @@ Accel_X = (data.x_AccelX___G____3_0_3_0_25_');
 Accel_Y = (data.x_AccelY___G____3_0_3_0_25_');
 Accel_Z = (data.x_AccelZ___G____3_0_3_0_25_');
 
-Selected_Lat(1)  =  40.84479;
-Selected_Lat(2)  =  40.84487;
-Selected_Long(1) = -96.76793;
-Selected_Long(2) = -96.76790;
+if (0)
+    Selected_Lat(1)  =  40.84479;
+    Selected_Lat(2)  =  40.84487;
+    Selected_Long(1) = -96.76793;
+    Selected_Long(2) = -96.76790;
+else
+    f = figure;
+    
+    scatter(nonzeros(Lat), nonzeros(Long));%#ok<*NASGU>
+    [Selected_Lat,Selected_Long]=ginput(2);
+    close(f);
+end
+
+if(Selected_Lat(2)<Selected_Lat(1))
+    temp = Selected_Lat(2);
+    Selected_Lat(2) = Selected_Lat(1);
+    Selected_Lat(1) = temp;
+end
+if(Selected_Long(2)<Selected_Long(1))
+    temp = Selected_Long(2);
+    Selected_Long(2) = Selected_Long(1);
+    Selected_Long(1) = temp;
+end
 
 LapNumber = 1;
 counter = 0;
@@ -57,7 +76,7 @@ index = 1;
 
 
 %Sampling Frequency => Default is 1
-SamplingFreq = 4;
+SamplingFreq = 1;
 
 %Cutoff Points => I.e if you need to get rid of garbage data at
 %start or finish
@@ -67,47 +86,49 @@ SamplingFinish = 80;
 for i = SamplingStart:(length(Yaw) - SamplingFinish)
     
     if (counter == 0) && ((Lat(i) <= Selected_Lat(2)) && (Lat(i) >= Selected_Lat(1))) && ((Long(i) <= Selected_Long(2)) && (Long(i) >= Selected_Long(1)))
-        LapIndex(LapNumber,1) =index;
+        LapIndex(LapNumber,1) =index-1;
         index = 1;
-        counter = 2000;
+        counter = 8000/SamplingFreq;
         LapNumber = LapNumber + 1;
     end
     
-        %Here the filtered data is
-        Lat_filtered(index,LapNumber)= Lat(i);
-        Long_filtered(index,LapNumber)= Long(i);
-        Speed_filtered(index,LapNumber)= Speed(i);
-        Time_filtered(index,LapNumber)= Time(i);
-        RPM_filtered(index,LapNumber)= RPM(i);
-        Steering_Angle_filtered(index,LapNumber)= Steering_Angle(i);
-        Altitude_filtered(index,LapNumber)= Altitude(i);
-        
-        %POTENTIOMETERS
-        FL_Damper_filtered(index,LapNumber)= FL_Damper(i);
-        FR_Damper_filtered(index,LapNumber)= FR_Damper(i);
-        RL_Damper_filtered(index,LapNumber)= RL_Damper(i);
-        RR_Damper_filtered(index,LapNumber)= RR_Damper(i);
-        
-        %BRAKES
-        R_Brake_filtered(index,LapNumber)= R_Brake(i);
-        F_Brake_filtered(index,LapNumber)= F_Brake(i);
-        
-        %ROLL
-        Yaw_filtered(index,LapNumber)= Yaw(i);
-        Pitch_filtered(index,LapNumber)= Pitch(i);
-        Roll_filtered(index,LapNumber)= Roll(i);
-        
-        %ACCELERATION
-        Accel_X_filtered(index,LapNumber)= Accel_X(i);
-        Accel_Y_filtered(index,LapNumber)= Accel_Y(i);
-        Accel_Z_filtered(index,LapNumber)= Accel_Z(i);
-        
-        index = index + 1;
-    i = i + SamplingFreq - 1; 
+    %Here the filtered data is
+    Lat_filtered(index,LapNumber)= Lat(i);
+    Long_filtered(index,LapNumber)= Long(i);
+    Speed_filtered(index,LapNumber)= Speed(i);
+    Time_filtered(index,LapNumber)= Time(i);
+    RPM_filtered(index,LapNumber)= RPM(i);
+    Steering_Angle_filtered(index,LapNumber)= Steering_Angle(i);
+    Altitude_filtered(index,LapNumber)= Altitude(i);
+    
+    %POTENTIOMETERS
+    FL_Damper_filtered(index,LapNumber)= FL_Damper(i);
+    FR_Damper_filtered(index,LapNumber)= FR_Damper(i);
+    RL_Damper_filtered(index,LapNumber)= RL_Damper(i);
+    RR_Damper_filtered(index,LapNumber)= RR_Damper(i);
+    
+    %BRAKES
+    R_Brake_filtered(index,LapNumber)= R_Brake(i);
+    F_Brake_filtered(index,LapNumber)= F_Brake(i);
+    
+    %ROLL
+    Yaw_filtered(index,LapNumber)= Yaw(i);
+    Pitch_filtered(index,LapNumber)= Pitch(i);
+    Roll_filtered(index,LapNumber)= Roll(i);
+    
+    %ACCELERATION
+    Accel_X_filtered(index,LapNumber)= Accel_X(i);
+    Accel_Y_filtered(index,LapNumber)= Accel_Y(i);
+    Accel_Z_filtered(index,LapNumber)= Accel_Z(i);
+    
+    index = index + 1;
+    i = i + SamplingFreq - 1;
     if counter ~= 0   %To make sure counter doesn't go below zero... counter should be a multiple of freq
         counter = counter - 1;
     end
 end
+LapIndex(LapNumber,1) =index-1;
+LapNumber
 
 
 %Re-saving into new structure
@@ -250,3 +271,5 @@ end
 
 fclose(FID);
 end
+
+
