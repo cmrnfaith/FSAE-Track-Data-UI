@@ -1,3 +1,5 @@
+%NOTES FOR PSUEDO CODE
+
 %PARAMETERS NEEDED
     %Ride Height: (mm)
         FLride = 50;
@@ -15,10 +17,10 @@
         %RRshockstroke
         %RLshockstroke
     %Motion Ratio (Can compare measure or calculated)
-        FLmotionratio = .5;
-        FRmotionratio = .5;
-        RRmotionratio = .5;
-        RLmotionratio = .5;
+        FLmotionratio = 1;
+        FRmotionratio = 1;
+        RRmotionratio = 1;
+        RLmotionratio = 1;
     %Track: (mm)
         Ftrack = 1141;
         Rtrack = 1391;
@@ -132,6 +134,7 @@ for i = 1:length(FLbump)
     RRcamberchange = cambergain * RRbump;
     RLcamberchange = cambergain * RLbump;
 end
+
 
 %STEP 8: CALCULATE TOTAL DYNAMIC CAMBER
 for i = 1:length(FLcamberchange)
