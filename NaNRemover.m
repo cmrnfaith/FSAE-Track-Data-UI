@@ -164,7 +164,7 @@ data_filtered.Accel_Z = Accel_Z_filtered;
 %LapIndexes
 data_filtered.Lap_Index = LapIndex;
 
-struct2csv(data_filtered, 'log_1_cleaned.csv');
+struct2csv(data_filtered, 'rc_8_cleaned.csv');
 clear
 function struct2csv(s,fn)
 % STRUCT2CSV(s,fn)
